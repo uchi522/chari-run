@@ -7,3 +7,7 @@ export const SCROLL_SPEED = 3;
 export const BIKE_X = 150;
 export const WHEEL_RADIUS = 18;
 export const WHEEL_GAP = 50;
+
+// Jump physics
+export const JUMP_FORCE = -12;
+export const GRAVITY = 0.6;

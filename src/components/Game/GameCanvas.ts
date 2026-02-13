@@ -92,10 +92,10 @@ function drawWheel(
   }
 }
 
-export function drawBike(ctx: CanvasRenderingContext2D, angle: number) {
+export function drawBike(ctx: CanvasRenderingContext2D, angle: number, bikeY: number) {
   const rearWheelX = BIKE_X;
   const frontWheelX = BIKE_X + WHEEL_GAP;
-  const wheelY = GROUND_Y - WHEEL_RADIUS;
+  const wheelY = bikeY - WHEEL_RADIUS;
 
   drawWheel(ctx, rearWheelX, wheelY, angle);
   drawWheel(ctx, frontWheelX, wheelY, angle);
