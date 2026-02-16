@@ -14,8 +14,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Workflow Delegation
 
-- **Review Phase**: Before completing the REFACTOR phase or creating a PR, you MUST delegate the review task to the sub-agent at `.claude/agents/code-reviewer.md`.
+- **Review Phase**: Before completing the REFACTOR phase, you MUST delegate the review task to the sub-agent at `.claude/agents/code-reviewer.md`.
 - **Approval Requirement**: Do not proceed to the final commit unless the sub-agent's output contains `#APPROVED`. If `#REQUEST_CHANGES` is returned, address all indicated issues and re-request review.
+- **PR Creation**: After the sub-agent approves the changes (`#APPROVED`) and you have made the final commit, you MUST create a Pull Request using `gh pr create --fill`.
 
 ## Project Overview
 
