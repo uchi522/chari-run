@@ -11,3 +11,6 @@ export const WHEEL_GAP = 50;
 // Jump physics
 export const JUMP_FORCE = -12;
 export const GRAVITY = 0.6;
+
+// Score config
+export const SCORE_PER_SECOND = 10; // 1秒あたり10点
