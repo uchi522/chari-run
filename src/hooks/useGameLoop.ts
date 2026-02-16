@@ -1,6 +1,18 @@
 import { useEffect, type RefObject } from "react";
-import { CANVAS_WIDTH, CANVAS_HEIGHT, SCROLL_SPEED, WHEEL_RADIUS, GROUND_Y, JUMP_FORCE, GRAVITY } from "@/constants/game";
-import { drawSky, drawClouds, drawGround, drawBike } from "@/components/Game/GameCanvas";
+import {
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  SCROLL_SPEED,
+  WHEEL_RADIUS,
+  GROUND_Y,
+  JUMP_FORCE,
+  GRAVITY,
+  OBSTACLE_INTERVAL,
+  OBSTACLE_WIDTH,
+  OBSTACLE_HEIGHT,
+  type Obstacle,
+} from "@/constants/game";
+import { drawSky, drawClouds, drawGround, drawBike, drawObstacle } from "@/components/Game/GameCanvas";
 
 export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
   useEffect(() => {
@@ -14,6 +26,8 @@ export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
     let wheelAngle = 0;
     let bikeY = GROUND_Y;
     let velocityY = 0;
+    let obstacles: Obstacle[] = [];
+    let nextObstacleSpawn = OBSTACLE_INTERVAL;
 
     function handleKeyDown(e: KeyboardEvent) {
       if (e.code === "Space" && bikeY >= GROUND_Y) {
@@ -30,6 +44,25 @@ export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
       groundOffset += SCROLL_SPEED;
       wheelAngle += SCROLL_SPEED / WHEEL_RADIUS;
 
+      // 障害物生成
+      if (groundOffset >= nextObstacleSpawn) {
+        obstacles.push({
+          x: CANVAS_WIDTH,
+          y: GROUND_Y - OBSTACLE_HEIGHT,
+          width: OBSTACLE_WIDTH,
+          height: OBSTACLE_HEIGHT,
+        });
+        nextObstacleSpawn = groundOffset + OBSTACLE_INTERVAL;
+      }
+
+      // 障害物移動
+      obstacles.forEach(obs => {
+        obs.x -= SCROLL_SPEED;
+      });
+
+      // 画面外の障害物削除
+      obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+
       velocityY += GRAVITY;
       bikeY += velocityY;
       if (bikeY >= GROUND_Y) {
@@ -40,6 +73,12 @@ export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
       drawSky(ctx);
       drawClouds(ctx, groundOffset);
       drawGround(ctx, groundOffset);
+
+      // 障害物描画
+      obstacles.forEach(obs => {
+        drawObstacle(ctx, obs);
+      });
+
       drawBike(ctx, wheelAngle, bikeY);
 
       animationId = requestAnimationFrame(gameLoop);
