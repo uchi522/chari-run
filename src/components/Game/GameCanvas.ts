@@ -195,3 +195,25 @@ export function drawBike(ctx: CanvasRenderingContext2D, angle: number, bikeY: nu
   ctx.lineWidth = 1;
   ctx.stroke();
 }
+
+export function drawObstacle(ctx: CanvasRenderingContext2D, obstacle: { x: number; y: number; width: number; height: number }) {
+  ctx.save();
+  ctx.fillStyle = "#666";
+  ctx.strokeStyle = "#333";
+  ctx.lineWidth = 2;
+
+  // 楕円形の石を描画
+  ctx.beginPath();
+  ctx.ellipse(
+    obstacle.x + obstacle.width / 2,
+    obstacle.y + obstacle.height / 2,
+    obstacle.width / 2,
+    obstacle.height / 2,
+    0,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+}
