@@ -1,6 +1,7 @@
 import { useEffect, type RefObject } from "react";
-import { CANVAS_WIDTH, CANVAS_HEIGHT, SCROLL_SPEED, WHEEL_RADIUS, GROUND_Y, JUMP_FORCE, GRAVITY } from "@/constants/game";
-import { drawSky, drawClouds, drawGround, drawBike } from "@/components/Game/GameCanvas";
+import { CANVAS_WIDTH, CANVAS_HEIGHT, SCROLL_SPEED, WHEEL_RADIUS, GROUND_Y, JUMP_FORCE, GRAVITY, SCORE_PER_SECOND } from "@/constants/game";
+import { drawSky, drawClouds, drawGround, drawBike, drawScore } from "@/components/Game/GameCanvas";
+import { calculateScore } from "@/utils/score";
 
 export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
   useEffect(() => {
@@ -14,6 +15,8 @@ export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
     let wheelAngle = 0;
     let bikeY = GROUND_Y;
     let velocityY = 0;
+    let score = 0;
+    let frameCount = 0;
 
     function handleKeyDown(e: KeyboardEvent) {
       if (e.code === "Space" && bikeY >= GROUND_Y) {
@@ -26,6 +29,13 @@ export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
     function gameLoop() {
       if (!ctx) return;
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      // スコア更新（スコアが変わる時のみ計算）
+      frameCount++;
+      const newScore = calculateScore(frameCount, SCORE_PER_SECOND);
+      if (newScore !== score) {
+        score = newScore;
+      }
 
       groundOffset += SCROLL_SPEED;
       wheelAngle += SCROLL_SPEED / WHEEL_RADIUS;
@@ -41,6 +51,7 @@ export function useGameLoop(canvasRef: RefObject<HTMLCanvasElement | null>) {
       drawClouds(ctx, groundOffset);
       drawGround(ctx, groundOffset);
       drawBike(ctx, wheelAngle, bikeY);
+      drawScore(ctx, score);
 
       animationId = requestAnimationFrame(gameLoop);
     }

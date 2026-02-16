@@ -195,3 +195,16 @@ export function drawBike(ctx: CanvasRenderingContext2D, angle: number, bikeY: nu
   ctx.lineWidth = 1;
   ctx.stroke();
 }
+
+export function drawScore(ctx: CanvasRenderingContext2D, score: number) {
+  ctx.save();
+  ctx.font = "bold 24px Arial";
+  ctx.fillStyle = "white";
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 3;
+
+  const text = `Score: ${score}`;
+  ctx.strokeText(text, 20, 30);
+  ctx.fillText(text, 20, 30);
+  ctx.restore();
+}
